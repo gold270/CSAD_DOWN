@@ -1,0 +1,323 @@
+<?xml version="1.0"?>
+
+<!-- 
+ ==================================================================
+ @File : task_configuration.xml
+ @Info : Task Configuration File
+ @Ver. : 0.1 - Created by Dongwoo Kim on May. 18 2018
+ ==================================================================
+-->
+
+<!-- TaskList 내의 Task 작성방법
+  <Task이름>                                    : (mandatory) Task 이름을 넣는다, Task 가 되는 프로젝트의 이름을 넣어준다.
+    <TaskInfo>                                  : (mandatory) 기본 형식, 모든 Task 설정에 있어야 함
+      <MsgQ_Count> XXX </MsgQ_Count>            : (mandatory) 기본 형식, Task 가 가지고 있는 MsgQ 의 최대 갯수를 지정해준다. 최대 사이즈는 기본사이즈인 1024 이다.
+      
+      <ShmInfo name="shm_Camera" block_size="4147200" block_count="30" access_type="Write"/> 
+                                                : (optional)
+                                                : 공유메모리를 만들어야 할 때 사용한다.
+                                                : name: 공유메모리 이름
+                                                : block_size: 공유메모리의 블록당 사이즈
+                                                : block_count: 공유메모리의 블록 사이즈
+                                                : access_type: 공유메모리를 Write 하는지 Read 하는지 적어준다
+                                                : 공유메모리의 크기는 block_size * block_count 가 됨
+                                                : access_type 이 Write 일때 공유메모리를 Create 하며 Read 일때는 Open한다.
+                                                : Read 일 경우 어느 한 Task 가 해당 이름의 공유메모리를 Write 설정으로 만들어야 사용할 수 있다.
+      
+      <ShmInfo name="shm_Camera" access_type="Read"/>
+                                                : (optional)
+                                                : 공유메모리를 참조할 때 사용한다.
+                                                : ShmInfo 설정은 여러개 들어갈 수 없다.단 한개만 사용 가능
+    </TaskInfo>
+    
+    <SubscribeInfo>                             : (optional) Task 에서 Message 를 subscribe 설정을 넣어준다.                   
+          <MsgQNode name="IMU" MsgId="0"/>        : Message Queue 로 Subscribe 할 설정을 넣어준다. (현재 버전에서는 MsgQ만 가능)
+                                                : name: Subscribe 할 Task 이름을 넣어준다.
+                                                : MsgID: Subscribe 할 Message ID 를 넣어준다.                                          
+    </SubscribeInfo>
+    
+     <PublishInfo>                             : (optional) Task 에서 Message 를 publish 설정을 넣어준다.                   
+          <MsgQNode name="IMU" MsgId="0"/>        : Message Queue 로 publish 할 설정을 넣어준다. (현재 버전에서는 MsgQ만 가능)
+                                                : name: publish 할 Task 이름을 넣어준다.
+                                                : MsgID: publish 할 Message ID 를 넣어준다.   
+         
+          <UDPNode address="192.168.1.70" port="8192" MsgId="1" ExtendBuffer="true"/>
+                                                : UDP 로 Publish 할 설정을 넣어준다.
+                                                : address: publish 할 IP Address 를 넣어준다
+                                                : Port: UDP의 Port 번호를 넣어준다
+                                                : MsgID: Publish 할 Message ID 를 넣어준다.
+                                                : ExtendBuffer: 큰 사이즈 데이터 전송을 위해 확장된 버퍼를 사용하도록 함
+                                                
+           <TCPNode address="192.168.1.70" port="8192" MsgId="1" ExtendBuffer="true"/>
+                                                : TCP 로 Publish 할 설정을 넣어준다.
+                                                : address: publish 할 IP Address 를 넣어준다
+                                                : Port: TCP의 Port 번호를 넣어준다
+                                                : MsgID: Publish 할 Message ID 를 넣어준다.
+                                                : ExtendBuffer: 큰 사이즈 데이터 전송을 위해 확장된 버퍼를 사용하도록 함
+    
+    </PublishInfo>
+    
+  
+  </Task이름>
+  
+  
+-->
+
+<TaskConfiguration>
+     
+    <TaskID name="Internal" id="0" />
+    <TaskID name="Launcher" id="1" />
+    <TaskID name="UserInterface" id="2" />
+    <TaskID name="IMU" id="3" />
+    <TaskID name="Sync" id="4" />
+    <TaskID name="GPSIMU" id="5" />
+    <TaskID name="CAN" id="6" />
+    <TaskID name="Recorder" id="7" />
+    <TaskID name="Player" id="8" />
+    <TaskID name="Camera" id="9" />
+    <TaskID name="RTK" id="10" />
+    <TaskID name="ObjectDetection" id="11" />
+    <TaskID name="SensorFusionSLAM" id="12" />
+    <TaskID name="DebugLogger" id="13" />
+    <!-- RUDP 전송 시연을 위한 임시 Task ID 추가
+    <TaskID name="CameraResize" id="14" />
+    -->
+
+    
+    <TaskList>
+    
+        <Comm>
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+            </TaskInfo>
+        </Comm>
+        
+        <CAN>
+            <!-- MsgID 0: Can data -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Comm" MsgId="2"/>
+            </SubscribeInfo>  
+        </CAN>
+    
+        <IMU>
+            <!-- MsgID 0: IMU data -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Comm" MsgId="3"/>
+                <MsgQNode name="Comm" MsgId="4"/>
+                <MsgQNode name="Comm" MsgId="5"/>
+            </SubscribeInfo>             
+        </IMU>
+     
+        <GPSIMU>
+            <!-- MsgID 0: GPS ESFINS data -->
+            <!-- MsgID 1: GPS ESFALG data -->
+            <!-- MsgID 2: GPS HNRPVT data -->
+            <!-- MsgID 3: GPS NAVATT data -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Comm" MsgId="1"/>
+            </SubscribeInfo> 
+        </GPSIMU>
+        <RTK>
+            <!-- MsgID 0: RTK data -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+            </TaskInfo>
+            
+        </RTK>
+    
+
+        <Camera>
+            <!-- MsgID 0: Camera data -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+                <ShmInfo name="Camera" block_size="4147200" block_count="30" access_type="Write"/>
+                <!-- RUDP 전송 시연을 위한 shared memory 추가
+                <ShmInfo name="CameraResize" block_size="1036800" block_count="30" access_type="Write"/>
+                --> 
+            </TaskInfo>
+        </Camera>
+       
+    
+        <Sync>
+            <!-- MsgID 0: IMU data -->
+            <!-- MsgID 1: GPS ESFINS data -->
+            <!-- MsgID 2: GPS ESFALG data -->
+            <!-- MsgID 3: GPS HNRPVT data -->
+            <!-- MsgID 4: GPS NAVATT data -->
+            <!-- MsgID 5: CAN data -->
+            <!-- MsgID 6: Camera data -->
+            <!-- MsgID 7: RTK data -->
+            <!-- MsgID 8: HISTORY data -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+                <ShmInfo name="Camera" access_type="Read"/> 
+            </TaskInfo>
+            <SubscribeInfo> 
+                <MsgQNode name="CAN" MsgId="0"/>
+                <MsgQNode name="IMU" MsgId="0"/>
+                <MsgQNode name="GPSIMU" MsgId="0, 1, 2, 3"/>
+                <MsgQNode name="RTK" MsgId="0"/>
+                <MsgQNode name="Camera" MsgId="0"/>
+            </SubscribeInfo> 
+        </Sync>
+        <Recorder>
+            <!-- MsgID 0: Camera data -->
+            <!-- MsgID 1: RTK data -->
+            <!-- MsgID 2: IMU data -->
+            <!-- MsgID 3: GPS HNRPVT data -->
+            <!-- MsgID 4: GPS ESFINS data -->
+            <!-- MsgID 5: GPS NAVATT data -->
+            <!-- MsgID 6: CAN data -->
+            <!-- MsgID 7: HISTORY data -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+                <ShmInfo name="Camera" access_type="Read"/>
+            </TaskInfo>
+            <SubscribeInfo> 
+                <MsgQNode name="Sync" MsgId="0, 1, 2, 3, 4, 5, 6, 7"/>
+                <MsgQNode name="UserInterface" MsgId="1, 2"/>
+            </SubscribeInfo> 
+        </Recorder>
+    
+        <Diagnostics>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+                <ShmInfo name="Camera" access_type="Read"/> 
+            </TaskInfo>
+            <SubscribeInfo> 
+                <MsgQNode name="CAN" MsgId="0"/>
+                <MsgQNode name="IMU" MsgId="0"/>
+                <MsgQNode name="GPSIMU" MsgId="0, 1, 2, 3"/>
+                <MsgQNode name="RTK" MsgId="0"/>
+                <MsgQNode name="Camera" MsgId="0"/>
+                <MsgQNode name="UserInterface" MsgId="1, 2"/>
+            </SubscribeInfo> 
+        </Diagnostics>
+    
+        <UserInterface>
+            <!-- MsgID 0: Destroy All Task -->
+            <!-- MsgID 1: CMD Record Start -->
+            <!-- MsgID 2: CMD Record Stop -->
+            <!-- MsgID 3: CMD Reset All Task -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+            </TaskInfo>
+            <PublishInfo>
+                <MsgQNode name="Launcher" MsgId="0, 3"/>
+            </PublishInfo>
+        </UserInterface>
+    
+        <HistoryDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+                <ShmInfo name="Camera" access_type="Read"/>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="7"/>
+                <MsgQNode name="UserInterface" MsgId="1, 2"/>
+            </SubscribeInfo> 
+        </HistoryDump>
+    
+        <ImuDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 50 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="2"/>
+            </SubscribeInfo> 
+        </ImuDump>
+    
+        <CanDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 50 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="6"/>
+            </SubscribeInfo> 
+        </CanDump>
+    
+        <RtkDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 50 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="1"/>
+            </SubscribeInfo> 
+        </RtkDump>
+    
+        <CamDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 15 </MsgQ_Count>
+                <ShmInfo name="Camera" access_type="Read"/>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="0"/>
+                <MsgQNode name="UserInterface" MsgId="1, 2"/>
+            </SubscribeInfo> 
+        </CamDump>
+    
+        <HnrpvtDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 50 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="3"/>
+            </SubscribeInfo> 
+        </HnrpvtDump>
+    
+        <EsfinsDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 50 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="4"/>
+            </SubscribeInfo> 
+        </EsfinsDump>
+    
+        <NavattDump>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 50 </MsgQ_Count>
+            </TaskInfo>
+            <SubscribeInfo>
+                <MsgQNode name="Recorder" MsgId="5"/>
+            </SubscribeInfo> 
+        </NavattDump>
+    
+        <DebugLogger>
+            <!--Not implement Msg -->
+            <TaskInfo>
+                <MsgQ_Count> 100 </MsgQ_Count>
+                <ShmInfo name="DebugLogger" block_size="4147200" block_count="5" access_type="Write"/>
+                <!-- RUDP 전송 시연을 위한 shared memory 추가
+                <ShmInfo name="CameraResize" access_type="Read"/>
+                -->
+            </TaskInfo>
+        
+            <PublishInfo>                                            
+                <UDPNode address="192.168.1.61" port="7979" MsgId="0" ExtendBuffer="true"/>
+                <UDPNode address="192.168.1.61" port="7980" MsgId="1" ExtendBuffer="true"/>
+            </PublishInfo>  
+              
+        </DebugLogger>
+    
+    </TaskList>
+
+</TaskConfiguration>

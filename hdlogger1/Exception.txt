@@ -1,0 +1,37 @@
+[2018-05-31 17:36:11] Task Create timeout: IMU DebugLogger 
+[2018-06-07 16:38:54] MsgQ Buffer Full (CamDump, max_msg#15)
+
+[2018-06-07 16:39:04] MsgQ Buffer Full (CamDump, max_msg#15)
+
+[2018-06-07 16:39:15] MsgQ Buffer Full (CamDump, max_msg#15)
+
+[2018-06-07 16:40:08] MsgQ Buffer Full (CamDump, max_msg#15)
+
+[2080-01-15 21:19:55] Task Stop timeout: Camera 
+[2080-01-15 21:28:27] Task Stop timeout: Camera 
+[2080-01-15 21:29:08] Task Stop timeout: Camera 
+[2080-01-15 21:34:09] Task Initialize timeout: Comm 
+[2080-01-15 21:34:18] Task Initialize timeout: Comm 
+[2018-07-03 18:28:24] Task Stop timeout: Camera 
+[2018-07-03 19:40:08] Task Create timeout: CAN 
+[2018-07-03 19:42:29] Task Create timeout: CAN 
+[2018-07-03 19:42:54] Task Create timeout: CAN 
+[2018-07-03 19:43:04] Task Create timeout: CAN 
+[2018-07-03 20:01:35] MsgQ Send Err (IMU, boost::interprocess_exception::library_error)
+
+[2018-07-03 20:02:03] MsgQ Send Err (IMU, boost::interprocess_exception::library_error)
+
+[2018-07-03 20:05:13] MsgQ Send Err (IMU, boost::interprocess_exception::library_error)
+
+[2018-07-03 20:07:53] MsgQ Send Err (IMU, boost::interprocess_exception::library_error)
+
+[2018-07-03 20:08:17] MsgQ Send Err (IMU, boost::interprocess_exception::library_error)
+
+[2018-07-03 20:12:23] MsgQ Send Err (CAN, boost::interprocess_exception::library_error)
+
+[2018-07-03 20:12:27] MsgQ Send Err (CAN, boost::interprocess_exception::library_error)
+
+[2018-07-03 20:41:36] Task Stop timeout: Camera 
+[2080-01-16 23:49:57] Task Stop timeout: Camera 
+[2018-07-04 16:58:31] Task Stop timeout: Camera 
+[2018-07-04 17:27:05] Task Stop timeout: Camera 
